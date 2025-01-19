@@ -45,12 +45,6 @@ This project defines a custom library for Robot Framework called Actions. It con
    ```sh
    pip install robotframework
    ```
-3. Set up the library for testing:
-   ```sh
-   mkdir -p src/actions
-   touch src/actions/__init__.py
-   touch src/actions/math_operations.py
-   ```
 
 ## Usage
 
