@@ -1,28 +1,26 @@
 pipeline {
     agent any
-    
     parameters {
-        choice(name: 'Bundle', choices: ['AdobePremium', 'AdobeUltimate'], description: 'Select the product bundle')
-        choice(name: 'TestMode', choices: ['WebInstall', 'Download', 'DirectDownload', 'CustomInstall', 'CustomDeploy', 'UATTest'], description: 'Select test mode')
-        string(name: 'BuildVersion', defaultValue: 'latest', description: 'Specify the build version')
+        string(name: 'Year', defaultValue: '2025', description: 'Enter Year (default: 2025)')
+        string(name: 'TestCases', defaultValue: '', description: 'Enter test cases to run (comma-separated, default runs all)')
     }
-    
-    environment {
-        ROBOT_ENV = 'test'  // Define the environment for Robot Framework
-    }
-    
     stages {
-        stage('Checkout') {
-            steps {
-                // Pull your repository code
-                checkout scm
-            }
-        }
-        stage('Run Tests') {
+        stage('Run All Robot Tests') {
             steps {
                 script {
-                    // Run Robot Framework tests
-                    echo "Hello World
+                    // Call the Python script to run all tests for all products and modes
+                    def year = params.Year
+                    def testCases = params.TestCases
+                    
+                    // If no specific test cases are provided, run all available tests
+                    if (testCases == '') {
+                        echo "Running all tests for all modes and products."
+                    } else {
+                        echo "Running selected tests: ${testCases}"
+                    }
+
+                    // Call Python script
+                    sh "python3 run_robot_tests.py ${year} ${testCases}"
                 }
             }
         }
