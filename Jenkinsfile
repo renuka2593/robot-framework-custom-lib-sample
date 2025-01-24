@@ -1,26 +1,29 @@
 pipeline {
     agent any
     parameters {
+        choice(name: 'Product', choices: ['AdobePremium', 'AdobeUltimate'], description: 'Select Product')
+        choice(name: 'Mode', choices: ['Network'], description: 'Select Mode')
         string(name: 'Year', defaultValue: '2025', description: 'Enter Year (default: 2025)')
-        string(name: 'TestCases', defaultValue: '', description: 'Enter test cases to run (comma-separated, default runs all)')
+        string(name: 'BuildVersion', defaultValue: 'latest', description: 'Enter Build Version (default: latest)')
+        string(name: 'TestCases', defaultValue: 'WebInstall,Download,DirectDownload,CustomInstall,CustomDeploy,UATTest', description: 'Enter test cases to run (comma-separated, default runs all)')
     }
     stages {
-        stage('Run All Robot Tests') {
+        stage('Run Selected Robot Tests') {
             steps {
                 script {
-                    // Call the Python script to run all tests for all products and modes
+                    def product = params.Product
+                    def mode = params.Mode
                     def year = params.Year
-                    def testCases = params.TestCases
-                    
-                    // If no specific test cases are provided, run all available tests
-                    if (testCases == '') {
-                        echo "Running all tests for all modes and products."
-                    } else {
-                        echo "Running selected tests: ${testCases}"
-                    }
+                    def buildVersion = params.BuildVersion
+                    def testCases = params.TestCases.split(',')
 
-                    // Call Python script
-                    echo "python3 run_robot_tests.py ${year} ${testCases}"
+                    echo "Running tests for Product: ${product}, Mode: ${mode}, Year: ${year}, Build Version: ${buildVersion}"
+                    echo "Selected test cases: ${testCases.join(', ')}"
+
+                    testCases.each { testCase ->
+                        echo "Running test case: ${testCase}"
+                        echo "robot -v PRODUCT:${product} -v MODE:${mode} -v YEAR:${year} -v BUILD_VERSION:${buildVersion} tests/${testCase}.robot"
+                    }
                 }
             }
         }
