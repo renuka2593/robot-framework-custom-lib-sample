@@ -32,4 +32,5 @@ pipeline {
         always {
             archiveArtifacts artifacts: 'tests/output/*.xml, tests/output/*.html, tests/output/*.log', allowEmptyArchive: true
         }
+    }
 }
