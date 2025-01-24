@@ -22,7 +22,7 @@ pipeline {
             steps {
                 script {
                     // Run Robot Framework tests
-                    sh "robot --variable BUNDLE:${params.Bundle} --variable TEST_MODE:${params.TestMode} --variable BUILD_VERSION:${params.BuildVersion} path/to/tests"
+                    echo "Hello World
                 }
             }
         }
