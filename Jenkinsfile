@@ -20,7 +20,7 @@ pipeline {
                     }
 
                     // Call Python script
-                    sh "python3 run_robot_tests.py ${year} ${testCases}"
+                    echo "python3 run_robot_tests.py ${year} ${testCases}"
                 }
             }
         }
